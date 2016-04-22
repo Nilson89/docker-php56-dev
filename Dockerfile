@@ -23,6 +23,11 @@ ADD ./php-fpm.conf /etc/php5/fpm/php-fpm.conf
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer
 
+# Install PHPUnit
+RUN wget https://phar.phpunit.de/phpunit.phar \
+        && chmod +x phpunit.phar \
+        && mv phpunit.phar /usr/local/bin/phpunit
+
 # nginx conf
 RUN echo "\ndaemon off;" >> /etc/nginx/nginx.conf
 ADD ./vhost.conf /etc/nginx/sites-available/default
