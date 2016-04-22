@@ -23,7 +23,7 @@ RUN echo "\ndaemon off;" >> /etc/nginx/nginx.conf
 ADD ./vhost.conf /etc/nginx/sites-available/default
 
 # Supervisor conf
-#ADD ./supervisord.conf /etc/supervisor/supervisord.conf
+ADD ./supervisord.conf /etc/supervisor/supervisord.conf
 
 # Create Application folder
 RUN mkdir -p /var/www/application
