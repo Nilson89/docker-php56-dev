@@ -6,17 +6,22 @@ RUN apt-get update && apt-get upgrade -y
 
 # Update index and install dependencies
 RUN apt-get update && \
-        apt-get install -y nginx php5-fpm php5-cli curl supervisor git wget \
-        curl php5-curl php5-intl htop
+        apt-get install -y nginx php5-fpm php5-cli php5-intl curl supervisor git wget \
+        htop npm nodejs ruby
+
+# Update NPM
+RUN npm update
+
+# Set Node as executable
+RUN ln -s `which nodejs` /usr/bin/node
 
 # PHP conf
 RUN sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php5/fpm/php.ini
 RUN sed -i "s/;daemonize = yes/daemonize = no/" /etc/php5/fpm/php-fpm.conf
 ADD ./php-fpm.conf /etc/php5/fpm/php-fpm.conf
 
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php
-RUN mv composer.phar /usr/local/bin/composer
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer
 
 # nginx conf
 RUN echo "\ndaemon off;" >> /etc/nginx/nginx.conf
