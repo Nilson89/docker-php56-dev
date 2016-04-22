@@ -6,8 +6,8 @@ RUN apt-get update && apt-get upgrade -y
 
 # Update index and install dependencies
 RUN apt-get update && \
-        apt-get install -y nginx php5-fpm php5-cli php5-intl curl supervisor git wget \
-        htop npm nodejs ruby
+        apt-get install -y nginx php5-fpm php5-cli php5-intl php5-mysql php5-sqlite \
+        htop npm nodejs ruby curl supervisor git wget
 
 # Update NPM
 RUN npm update
