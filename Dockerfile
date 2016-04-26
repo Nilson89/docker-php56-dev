@@ -7,13 +7,16 @@ RUN apt-get update && apt-get upgrade -y
 # Update index and install dependencies
 RUN apt-get update && \
         apt-get install -y nginx php5-fpm php5-cli php5-intl php5-mysql php5-sqlite php5-curl \
-        htop npm nodejs ruby curl supervisor git wget vim
+        htop npm nodejs ruby curl supervisor git wget vim sudo acl
 
 # Update NPM
 RUN npm update
 
 # Set Node as executable
 RUN ln -s `which nodejs` /usr/bin/node
+
+# Timezone conf
+RUN cp -vf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
 # PHP conf
 RUN sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php5/fpm/php.ini
@@ -36,10 +39,11 @@ ADD ./vhost.conf /etc/nginx/sites-available/default
 ADD ./supervisord.conf /etc/supervisor/supervisord.conf
 
 # Create Application folder
-RUN mkdir -p /var/www/application
-RUN mkdir -p /var/log/application
-RUN chown www-data:www-data /var/www/application
-RUN chown www-data:www-data /var/log/application
+RUN mkdir -p /var/www/application \
+    && mkdir -p /var/log/application \
+    && usermod -u 1000 www-data \
+    && chown -R www-data:www-data /var/www/application \
+    && chown -R www-data:www-data /var/log/application
 
 # forward request and error logs to docker log collector
 RUN ln -sf /tmp/supervisord.log /var/log/nginx/access.log \
